@@ -1,5 +1,5 @@
 
-var prefix = "/goods/goodsCategory"
+var prefix = "/goods/goods"
 $(function() {
 	load();
 });
@@ -48,58 +48,52 @@ function load() {
 									checkbox : true
 								},
 																{
+									field : 'goodsId', 
+									title : '商品id' 
+								},
+																{
 									field : 'categoryId', 
-									title : '商品种类id' 
+									title : '所属类别id' 
 								},
 																{
-									field : 'parentId', 
-									title : '父种类id 为零表示顶层种类' 
+									field : 'goodsName', 
+									title : '商品名称' 
 								},
 																{
-									field : 'categoryName', 
-									title : '商品种类名称' 
-								},
+									field : 'nickname', 
+									title : '别名' 
+								}/*,
 																{
 									field : 'image', 
-									title : '商品种类主图' 
+									title : '商品主图' 
+								}*/,
+																{
+									field : 'delState', 
+									title : '删除 1是 2否' 
+								}/*,
+																{
+									field : 'simpleDescribe',
+									title : '简要描述'
 								},
 																{
-									field : 'state', 
-									title : '状态 1.启用 2.未启用 3 已删除',
-									align : 'center',
-									formatter : function(value, row, index) {
-										if (value == 3) {
-											return '<span class="label label-danger">已删除</span>';
-										} else if (value == '1') {
-											return '<span class="label label-primary">启用</span>';
-										} else if (value =='2'){
-											return '<span class="label label-primary">未启用</span>';
-										}
-									}
-								},
+									field : 'detailDescribe',
+									title : '详细描述'
+								}*/,
 																{
-									field : 'simpleDescribe', 
-									title : '简要描述' 
+									field : 'isMarketable', 
+									title : '上架标志 1 已上架 0 未上架' 
 								},
 																{
 									field : 'recommend', 
-									title : '推荐标志 1是 2否' ,
-									align : 'center',
-									formatter : function(value, row, index) {
-										if (value == 1) {
-											return '<span class="label label-primary">是</span>';
-										} else if (value == '2') {
-											return '<span class="label label-primary">否</span>';
-										}
-									}
+									title : '推荐 1是 2否' 
 								},
 																{
 									field : 'createTime', 
-									title : '创建时间' 
+									title : '' 
 								},
 																{
 									field : 'updateTime', 
-									title : '更新时间' 
+									title : '' 
 								},
 																{
 									field : 'adminId', 
@@ -107,17 +101,17 @@ function load() {
 								},
 																{
 									title : '操作',
-									field : 'categoryId',
+									field : 'id',
 									align : 'center',
 									formatter : function(value, row, index) {
 										var e = '<a class="btn btn-primary btn-sm '+s_edit_h+'" href="#" mce_href="#" title="编辑" onclick="edit(\''
-												+ row.categoryId
+												+ row.goodsId
 												+ '\')"><i class="fa fa-edit"></i></a> ';
 										var d = '<a class="btn btn-warning btn-sm '+s_remove_h+'" href="#" title="删除"  mce_href="#" onclick="remove(\''
-												+ row.categoryId
+												+ row.goodsId
 												+ '\')"><i class="fa fa-remove"></i></a> ';
 										var f = '<a class="btn btn-success btn-sm" href="#" title="备用"  mce_href="#" onclick="resetPwd(\''
-												+ row.categoryId
+												+ row.goodsId
 												+ '\')"><i class="fa fa-key"></i></a> ';
 										return e + d ;
 									}
@@ -138,7 +132,7 @@ function add() {
 	});
 }
 function edit(id) {
-	layer.open({
+	var editPage = layer.open({
 		type : 2,
 		title : '编辑',
 		maxmin : true,
@@ -146,6 +140,7 @@ function edit(id) {
 		area : [ '800px', '520px' ],
 		content : prefix + '/edit/' + id // iframe的url
 	});
+    layer.full(editPage);
 }
 function remove(id) {
 	layer.confirm('确定要删除选中的记录？', {
@@ -155,7 +150,7 @@ function remove(id) {
 			url : prefix+"/remove",
 			type : "post",
 			data : {
-				'categoryId' : id
+				'goodsId' : id
 			},
 			success : function(r) {
 				if (r.code==0) {
@@ -184,7 +179,7 @@ function batchRemove() {
 		var ids = new Array();
 		// 遍历所有选择的行数据，取每条数据对应的ID
 		$.each(rows, function(i, row) {
-			ids[i] = row['categoryId'];
+			ids[i] = row['goodsId'];
 		});
 		$.ajax({
 			type : 'POST',

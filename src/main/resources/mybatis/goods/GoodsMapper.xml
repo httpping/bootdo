@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.goods.dao.GoodsDao">
+
+	<select id="get" resultType="com.bootdo.goods.domain.GoodsDO">
+		select `goods_id`,`category_id`,`goods_name`,`nickname`,`image`,`del_state`,`simple_describe`,`detail_describe`,`is_marketable`,`recommend`,`create_time`,`update_time`,`admin_id` from t_goods where goods_id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.goods.domain.GoodsDO">
+		select `goods_id`,`category_id`,`goods_name`,`nickname`,`image`,`del_state`,`simple_describe`,`detail_describe`,`is_marketable`,`recommend`,`create_time`,`update_time`,`admin_id` from t_goods
+        <where>  
+		  		  <if test="goodsId != null and goodsId != ''"> and goods_id = #{goodsId} </if>
+		  		  <if test="categoryId != null and categoryId != ''"> and category_id = #{categoryId} </if>
+		  		  <if test="goodsName != null and goodsName != ''"> and goods_name = #{goodsName} </if>
+		  		  <if test="nickname != null and nickname != ''"> and nickname = #{nickname} </if>
+		  		  <if test="image != null and image != ''"> and image = #{image} </if>
+		  		  <if test="delState != null and delState != ''"> and del_state = #{delState} </if>
+		  		  <if test="simpleDescribe != null and simpleDescribe != ''"> and simple_describe = #{simpleDescribe} </if>
+		  		  <if test="detailDescribe != null and detailDescribe != ''"> and detail_describe = #{detailDescribe} </if>
+		  		  <if test="isMarketable != null and isMarketable != ''"> and is_marketable = #{isMarketable} </if>
+		  		  <if test="recommend != null and recommend != ''"> and recommend = #{recommend} </if>
+		  		  <if test="createTime != null and createTime != ''"> and create_time = #{createTime} </if>
+		  		  <if test="updateTime != null and updateTime != ''"> and update_time = #{updateTime} </if>
+		  		  <if test="adminId != null and adminId != ''"> and admin_id = #{adminId} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by goods_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from t_goods
+		 <where>  
+		  		  <if test="goodsId != null and goodsId != ''"> and goods_id = #{goodsId} </if>
+		  		  <if test="categoryId != null and categoryId != ''"> and category_id = #{categoryId} </if>
+		  		  <if test="goodsName != null and goodsName != ''"> and goods_name = #{goodsName} </if>
+		  		  <if test="nickname != null and nickname != ''"> and nickname = #{nickname} </if>
+		  		  <if test="image != null and image != ''"> and image = #{image} </if>
+		  		  <if test="delState != null and delState != ''"> and del_state = #{delState} </if>
+		  		  <if test="simpleDescribe != null and simpleDescribe != ''"> and simple_describe = #{simpleDescribe} </if>
+		  		  <if test="detailDescribe != null and detailDescribe != ''"> and detail_describe = #{detailDescribe} </if>
+		  		  <if test="isMarketable != null and isMarketable != ''"> and is_marketable = #{isMarketable} </if>
+		  		  <if test="recommend != null and recommend != ''"> and recommend = #{recommend} </if>
+		  		  <if test="createTime != null and createTime != ''"> and create_time = #{createTime} </if>
+		  		  <if test="updateTime != null and updateTime != ''"> and update_time = #{updateTime} </if>
+		  		  <if test="adminId != null and adminId != ''"> and admin_id = #{adminId} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.goods.domain.GoodsDO" useGeneratedKeys="true" keyProperty="goodsId">
+		insert into t_goods
+		(
+			`category_id`, 
+			`goods_name`, 
+			`nickname`, 
+			`image`, 
+			`del_state`, 
+			`simple_describe`, 
+			`detail_describe`, 
+			`is_marketable`, 
+			`recommend`, 
+			`create_time`, 
+			`update_time`, 
+			`admin_id`
+		)
+		values
+		(
+			#{categoryId}, 
+			#{goodsName}, 
+			#{nickname}, 
+			#{image}, 
+			#{delState}, 
+			#{simpleDescribe}, 
+			#{detailDescribe}, 
+			#{isMarketable}, 
+			#{recommend}, 
+			#{createTime}, 
+			#{updateTime}, 
+			#{adminId}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.goods.domain.GoodsDO">
+		update t_goods 
+		<set>
+			<if test="categoryId != null">`category_id` = #{categoryId}, </if>
+			<if test="goodsName != null">`goods_name` = #{goodsName}, </if>
+			<if test="nickname != null">`nickname` = #{nickname}, </if>
+			<if test="image != null">`image` = #{image}, </if>
+			<if test="delState != null">`del_state` = #{delState}, </if>
+			<if test="simpleDescribe != null">`simple_describe` = #{simpleDescribe}, </if>
+			<if test="detailDescribe != null">`detail_describe` = #{detailDescribe}, </if>
+			<if test="isMarketable != null">`is_marketable` = #{isMarketable}, </if>
+			<if test="recommend != null">`recommend` = #{recommend}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}, </if>
+			<if test="updateTime != null">`update_time` = #{updateTime}, </if>
+			<if test="adminId != null">`admin_id` = #{adminId}</if>
+		</set>
+		where goods_id = #{goodsId}
+	</update>
+	
+	<delete id="remove">
+		delete from t_goods where goods_id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from t_goods where goods_id in 
+		<foreach item="goodsId" collection="array" open="(" separator="," close=")">
+			#{goodsId}
+		</foreach>
+	</delete>
+
+</mapper>

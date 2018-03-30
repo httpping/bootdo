@@ -2,14 +2,6 @@ $().ready(function() {
 	validateRule();
 });
 
-/*
-$(function () {
-    laydate({
-        elem : '#createTime'
-    });
-});
-*/
-
 $.validator.setDefaults({
 	submitHandler : function() {
 		update();
@@ -19,7 +11,7 @@ function update() {
 	$.ajax({
 		cache : true,
 		type : "POST",
-		url : "/goods/goodsCategory/update",
+		url : "/goods/goods/update",
 		data : $('#signupForm').serialize(),// 你的formid
 		async : false,
 		error : function(request) {
